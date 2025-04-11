@@ -36,14 +36,14 @@ class DashboardView extends GetView<DashboardController> {
                 Navigator.pushNamed(context, "/pegawai");
               },
             ),
-            const Divider(), // Garis pemisah
-            ListTile(
-              leading: const Icon(Icons.logout, color: Colors.red),
-              title: const Text("Logout", style: TextStyle(color: Colors.red)),
-              onTap: () {
-                _logout();
-              },
-            ),
+            // const Divider(), // Garis pemisah
+            // ListTile(
+            //   leading: const Icon(Icons.logout, color: Colors.red),
+            //   title: const Text("Logout", style: TextStyle(color: Colors.red)),
+            //   onTap: () {
+            //     _logout();
+            //   },
+            // ),
           ],
         ),
       ),
@@ -86,18 +86,18 @@ class DashboardView extends GetView<DashboardController> {
     );
   }
 
-  void _logout() {
-    Get.defaultDialog(
-      title: "Logout",
-      middleText: "Apakah Anda yakin ingin logout?",
-      textConfirm: "Ya",
-      textCancel: "Batal",
-      confirmTextColor: Colors.white,
-      onConfirm: () {
-        // Misalnya, hapus token pengguna dari storage (jika ada)
-        // Setelah logout, arahkan pengguna ke halaman login
-        Get.offAllNamed("/login");
-      },
-    );
-  }
+  // void _logout() {
+  //   Get.defaultDialog(
+  //     title: "Logout",
+  //     middleText: "Apakah Anda yakin ingin logout?",
+  //     textConfirm: "Ya",
+  //     textCancel: "Batal",
+  //     confirmTextColor: Colors.white,
+  //     onConfirm: () {
+  //       // Misalnya, hapus token pengguna dari storage (jika ada)
+  //       // Setelah logout, arahkan pengguna ke halaman login
+  //       Get.offAllNamed("/login");
+  //     },
+  //   );
+  // }
 }

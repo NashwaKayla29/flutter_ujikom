@@ -4,6 +4,8 @@ import '../modules/Bahan/bindings/bahan_binding.dart';
 import '../modules/Bahan/views/bahan_view.dart';
 import '../modules/dashboard/bindings/dashboard_binding.dart';
 import '../modules/dashboard/views/dashboard_view.dart';
+import '../modules/data_pegawai/bindings/data_pegawai_binding.dart';
+import '../modules/data_pegawai/views/data_pegawai_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/login/bindings/login_binding.dart';
@@ -43,6 +45,11 @@ class AppPages {
       name: _Paths.PROFILE,
       page: () => const ProfileView(),
       binding: ProfileBinding(),
+    ),
+    GetPage(
+      name: _Paths.DATA_PEGAWAI,
+      page: () => const DataPegawaiView(),
+      binding: DataPegawaiBinding(),
     ),
   ];
 }

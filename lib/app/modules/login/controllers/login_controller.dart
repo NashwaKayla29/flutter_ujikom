@@ -34,7 +34,8 @@ class LoginController extends GetxController {
         if (response.body.containsKey('access_token')) {
           String? token = response.body['access_token'];
           if (token != null && token.isNotEmpty) {
-            authToken.write('auth_token', token);
+            authToken.write('access_token', token); // ganti dari 'auth_token'
+
             print('Navigasi ke DashboardView...');
             Get.offAll(() => const DashboardView());
           } else {

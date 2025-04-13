@@ -8,6 +8,7 @@ abstract class Routes {
   static const DASHBOARD = _Paths.DASHBOARD;
   static const BAHAN = _Paths.BAHAN;
   static const PROFILE = _Paths.PROFILE;
+  static const DATA_PEGAWAI = _Paths.DATA_PEGAWAI;
 }
 
 abstract class _Paths {
@@ -17,4 +18,5 @@ abstract class _Paths {
   static const DASHBOARD = '/dashboard';
   static const BAHAN = '/bahan';
   static const PROFILE = '/profile';
+  static const DATA_PEGAWAI = '/data-pegawai';
 }

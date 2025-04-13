@@ -1,44 +1,46 @@
 import 'dart:convert';
-
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:project_ujikom/app/data/profile_response.dart';
 import 'package:http/http.dart' as http;
+import 'package:project_ujikom/app/data/profile_response.dart';
 
 class ProfileController extends GetxController {
-  //TODO: Implement ProfileController
   final box = GetStorage();
-  final token = GetStorage().read('access_token');
   final isLoading = false.obs;
   var user = Rxn<User>();
 
   @override
   void onInit() {
-    fetchProfile();
     super.onInit();
+    fetchProfile();
   }
 
   void fetchProfile() async {
-    print("TOKEN DARI STORAGE: $token");
+    final token = box.read('access_token');
+
+    print("Token yang dipakai: $token");
+
+    if (token == null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Get.snackbar("Error", "Token tidak ditemukan, silakan login ulang.");
+      });
+      return;
+    }
+
     try {
       isLoading(true);
 
-      final token = GetStorage().read('access_token');
-      if (token == null) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          Get.snackbar("Error", "Token tidak ditemukan, silakan login ulang.");
-        });
-        return;
-      }
-
       final response = await http.get(
-        Uri.parse('http://192.168.0.52:8000/api/profile'),
+        Uri.parse('http://192.168.43.51:8000/api/profile'),
         headers: {
           'Authorization': 'Bearer $token',
           'Accept': 'application/json',
         },
       );
+
+      print("STATUS CODE: ${response.statusCode}");
+      print("RESPONSE BODY: ${response.body}");
 
       if (response.statusCode == 200) {
         final jsonData = json.decode(response.body);
@@ -46,48 +48,26 @@ class ProfileController extends GetxController {
           final profileResponse = ProfileResponse.fromJson(jsonData);
           user.value = profileResponse.user!;
         } else {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            Get.snackbar("Error", "Format data tidak valid (bukan JSON)");
-          });
+          Get.snackbar("Error", "Format data tidak valid (bukan JSON Map)");
         }
       } else if (response.statusCode == 401) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          Get.snackbar(
-              "Unauthorized", "Sesi login habis, silakan login ulang.");
-        });
+        Get.snackbar("Unauthorized", "Sesi login habis, silakan login ulang.");
       } else {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          Get.snackbar(
-              "Error", "Gagal mengambil data profil (${response.statusCode})");
-        });
+        Get.snackbar(
+            "Error", "Gagal mengambil data profil (${response.statusCode})");
       }
     } catch (e) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        Get.snackbar("Error", "Terjadi kesalahan: $e");
-      });
+      Get.snackbar("Error", "Terjadi kesalahan: $e");
     } finally {
       isLoading(false);
     }
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
-  }
-
   Future<void> logout() async {
     try {
-      final box = GetStorage();
-      box.remove('token');
-
+      await box.remove('access_token');
       print("Berhasil logout!");
-
-      Get.offAllNamed('/login'); // arahkan ke halaman login
+      Get.offAllNamed('/login');
     } catch (e) {
       print("Error saat logout: $e");
     }

@@ -16,7 +16,8 @@ class DashboardView extends GetView<DashboardController> {
           padding: EdgeInsets.zero,
           children: [
             const DrawerHeader(
-              decoration: BoxDecoration(color: Color.fromARGB(255, 33, 243, 226)),
+              decoration:
+                  BoxDecoration(color: Color.fromARGB(255, 33, 243, 226)),
               child: Text(
                 "Menu",
                 style: TextStyle(color: Colors.white, fontSize: 24),
@@ -33,7 +34,14 @@ class DashboardView extends GetView<DashboardController> {
               leading: const Icon(Icons.people),
               title: const Text("Data Pegawai"),
               onTap: () {
-                Navigator.pushNamed(context, "/pegawai");
+                Navigator.pushNamed(context, "/data-pegawai");
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.people),
+              title: const Text("Profile"),
+              onTap: () {
+                Navigator.pushNamed(context, "/profile");
               },
             ),
             // const Divider(), // Garis pemisah
@@ -52,8 +60,7 @@ class DashboardView extends GetView<DashboardController> {
         child: GridView.count(
           crossAxisCount: 2,
           children: [
-            _buildDashboardCard(
-                "Bahan", "3", Icons.layers, Colors.blue),
+            _buildDashboardCard("Bahan", "3", Icons.layers, Colors.blue, ),
             _buildDashboardCard(
                 "Data Pegawai", "5", Icons.people, Colors.orange),
           ],

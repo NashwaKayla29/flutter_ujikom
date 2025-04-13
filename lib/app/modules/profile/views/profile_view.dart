@@ -64,7 +64,7 @@ class ProfileView extends GetView<ProfileController> {
                     padding: const EdgeInsets.all(20),
                     child: Column(
                       children: [
-                        _buildInfoTile("Username", user.username ?? "-"),
+                        _buildInfoTile("Username", user.name ?? "-"),
                         const Divider(),
                         _buildInfoTile("Email", user.email ?? "-"),
                       ],

@@ -2,10 +2,18 @@ import 'package:get/get.dart';
 
 import '../modules/Bahan/bindings/bahan_binding.dart';
 import '../modules/Bahan/views/bahan_view.dart';
+import '../modules/Jahit/bindings/jahit_binding.dart';
+import '../modules/Jahit/views/jahit_view.dart';
+import '../modules/Potong/bindings/potong_binding.dart';
+import '../modules/Potong/views/potong_view.dart';
+import '../modules/Qc/bindings/qc_binding.dart';
+import '../modules/Qc/views/qc_view.dart';
 import '../modules/dashboard/bindings/dashboard_binding.dart';
 import '../modules/dashboard/views/dashboard_view.dart';
 import '../modules/data_pegawai/bindings/data_pegawai_binding.dart';
 import '../modules/data_pegawai/views/data_pegawai_view.dart';
+import '../modules/data_qc/bindings/data_qc_binding.dart';
+import '../modules/data_qc/views/data_qc_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/login/bindings/login_binding.dart';
@@ -50,6 +58,26 @@ class AppPages {
       name: _Paths.DATA_PEGAWAI,
       page: () => const DataPegawaiView(),
       binding: DataPegawaiBinding(),
+    ),
+    GetPage(
+      name: _Paths.DATA_QC,
+      page: () => const DataQcView(),
+      binding: DataQcBinding(),
+    ),
+    GetPage(
+      name: _Paths.POTONG,
+      page: () => const PotongView(),
+      binding: PotongBinding(),
+    ),
+    GetPage(
+      name: _Paths.JAHIT,
+      page: () => const JahitView(),
+      binding: JahitBinding(),
+    ),
+    GetPage(
+      name: _Paths.QC,
+      page: () => const QcView(),
+      binding: QcBinding(),
     ),
   ];
 }

@@ -66,6 +66,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/lottie/fashion.json
+    - assets/images/bertiga.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

@@ -32,7 +32,7 @@ class ProfileController extends GetxController {
       isLoading(true);
 
       final response = await http.get(
-        Uri.parse('http://192.168.43.51:8000/api/profile'),
+        Uri.parse('http:///192.168.0.122:8000/api/profile'),
         headers: {
           'Authorization': 'Bearer $token',
           'Accept': 'application/json',

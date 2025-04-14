@@ -17,7 +17,7 @@ class DataPegawaiController extends GetxController {
     try {
       isLoading(true);
       final response =
-          await http.get(Uri.parse('http://192.168.43.51:8000/api/data_pegawai'));
+          await http.get(Uri.parse('http:///192.168.0.122:8000/api/data_pegawai'));
 
       if (response.statusCode == 200) {
         final result = DataPegawai_response.fromJson(jsonDecode(response.body));

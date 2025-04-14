@@ -32,7 +32,7 @@ class Bahan {
 }
 
 class BahanController extends GetxController {
-  static const String baseUrl = 'http://192.168.43.51:8000/api/bahan';
+  static const String baseUrl = 'http://192.168.0.122:8000/api/bahan';
   var isLoading = false.obs;
   var bahanList = <Bahan>[].obs;
 

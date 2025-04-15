@@ -5,8 +5,9 @@ import 'package:project_ujikom/app/modules/dashboard/views/dashboard_view.dart';
 import 'package:project_ujikom/app/modules/login/views/login_view.dart';
 
 class HomeController extends GetxController {
-  final authToken = GetStorage();
+
   late Timer _pindah;
+  final authToken = GetStorage();
   //TODO: Implement HomeController
 
   @override

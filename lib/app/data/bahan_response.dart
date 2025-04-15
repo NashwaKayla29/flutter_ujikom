@@ -34,6 +34,8 @@ class Data {
   String? tanggalMasukBahan;
   String? masaBahan;
   String? yard;
+  String? stok;
+  String? keterangan;
   String? createdAt;
   String? updatedAt;
 
@@ -44,6 +46,8 @@ class Data {
       this.tanggalMasukBahan,
       this.masaBahan,
       this.yard,
+      this.stok,
+      this.keterangan,
       this.createdAt,
       this.updatedAt});
 
@@ -53,10 +57,13 @@ class Data {
     ukuranBahan = json['ukuran_bahan'];
     tanggalMasukBahan = json['tanggal_masuk_bahan'];
     masaBahan = json['masa_bahan'];
-    yard = json['yard'];
+    yard = json['yard']?.toString(); 
+    stok = json['stok']?.toString(); 
+    keterangan = json['keterangan']?.toString(); 
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
   }
+
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
@@ -66,6 +73,8 @@ class Data {
     data['tanggal_masuk_bahan'] = this.tanggalMasukBahan;
     data['masa_bahan'] = this.masaBahan;
     data['yard'] = this.yard;
+    data['stok'] = this.stok;
+    data['keterangan'] = this.keterangan;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
     return data;

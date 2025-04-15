@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:fl_chart/fl_chart.dart';
 import '../controllers/dashboard_controller.dart';
 
 class DashboardView extends GetView<DashboardController> {
@@ -22,6 +23,8 @@ class DashboardView extends GetView<DashboardController> {
           children: [
             _buildWelcomeCard(),
             const SizedBox(height: 20),
+            const GrafikProduksiView(), // GRAFIK DIMASUKIN DI SINI
+            const SizedBox(height: 20),
             GridView.count(
               crossAxisCount: 2,
               crossAxisSpacing: 16,
@@ -30,17 +33,23 @@ class DashboardView extends GetView<DashboardController> {
               physics: const NeverScrollableScrollPhysics(),
               children: [
                 _buildDashboardCard(
-                    "Bahan", "1", Icons.widgets, Colors.purple[200]!),
+                    "Bahan", "1", Icons.widgets, Colors.purple[200]!,
+                    onTap: () => Get.toNamed("/bahan")),
                 _buildDashboardCard(
-                    "Data pegawai", "4", Icons.people, Colors.purple[100]!),
+                    "Data pegawai", "4", Icons.people, Colors.purple[100]!,
+                    onTap: () => Get.toNamed("/data-pegawai")),
                 _buildDashboardCard(
-                    "Data Qc", "6", Icons.verified_user, Colors.cyan[100]!),
+                    "Data Qc", "6", Icons.verified_user, Colors.cyan[100]!,
+                    onTap: () => Get.toNamed("/data-qc")),
                 _buildDashboardCard(
-                    "Potong", "1", Icons.cut, Colors.green[100]!),
+                    "Potong", "1", Icons.cut, Colors.green[100]!,
+                    onTap: () => Get.toNamed("/potong")),
                 _buildDashboardCard(
-                    "Jahit", "1", Icons.radio_button_checked, Colors.red[100]!),
+                    "Jahit", "1", Icons.radio_button_checked, Colors.red[100]!,
+                    onTap: () => Get.toNamed("/jahit")),
                 _buildDashboardCard(
-                    "Qc", "1", Icons.check_circle, Colors.lightGreen[100]!),
+                    "Qc", "1", Icons.check_circle, Colors.lightGreen[100]!,
+                    onTap: () => Get.toNamed("/qc")),
               ],
             ),
           ],
@@ -50,35 +59,41 @@ class DashboardView extends GetView<DashboardController> {
   }
 
   Widget _buildDashboardCard(
-      String title, String value, IconData icon, Color color) {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CircleAvatar(
-              radius: 24,
-              backgroundColor: color.withOpacity(0.3),
-              child: Icon(icon, color: color, size: 30),
-            ),
-            const SizedBox(height: 12),
-            Text(
-              title,
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 4),
-            Text(
-              value,
-              style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87),
-            ),
-          ],
+      String title, String value, IconData icon, Color color,
+      {VoidCallback? onTap}) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(20),
+      child: Card(
+        elevation: 2,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircleAvatar(
+                radius: 24,
+                backgroundColor: color.withOpacity(0.3),
+                child: Icon(icon, color: color, size: 30),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                title,
+                style:
+                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 4),
+              Text(
+                value,
+                style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -116,8 +131,7 @@ class DashboardView extends GetView<DashboardController> {
           SizedBox(
             height: 80,
             child: Image(
-              image: AssetImage(
-                  "assets/images/bertiga.png"), // Pastikan file gambar ini tersedia
+              image: AssetImage("assets/images/bertiga.png"),
               fit: BoxFit.contain,
             ),
           ),
@@ -173,6 +187,91 @@ class DashboardView extends GetView<DashboardController> {
           ),
         ],
       ),
+    );
+  }
+}
+
+// =============== GRAFIK VIEW ===============
+class GrafikProduksiView extends StatelessWidget {
+  const GrafikProduksiView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      margin: const EdgeInsets.only(top: 10),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              "Grafik Data Produksi",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 20),
+            SizedBox(
+              height: 300,
+              child: BarChart(
+                BarChartData(
+                  alignment: BarChartAlignment.spaceAround,
+                  maxY: 6,
+                  titlesData: FlTitlesData(
+                    leftTitles: AxisTitles(
+                      sideTitles: SideTitles(showTitles: true),
+                    ),
+                    bottomTitles: AxisTitles(
+                      sideTitles: SideTitles(
+                        showTitles: true,
+                        getTitlesWidget: (value, meta) {
+                          final labels = [
+                            "Bahan",
+                            "Data Pegawai",
+                            "Data QC",
+                            "Potong",
+                            "Jahit",
+                            "QC"
+                          ];
+                          return SideTitleWidget(
+                            axisSide: meta.axisSide,
+                            child: Text(
+                              labels[value.toInt()],
+                              style: const TextStyle(fontSize: 10),
+                            ),
+                          );
+                        },
+                        interval: 1,
+                      ),
+                    ),
+                  ),
+                  barGroups: [
+                    _buildBar(0, 2, Colors.blue),
+                    _buildBar(1, 1, Colors.pinkAccent),
+                    _buildBar(2, 2, Colors.cyan),
+                    _buildBar(3, 0, Colors.greenAccent),
+                    _buildBar(4, 0, Colors.redAccent),
+                    _buildBar(5, 0, Colors.lightGreen),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  BarChartGroupData _buildBar(int x, double y, Color color) {
+    return BarChartGroupData(
+      x: x,
+      barRods: [
+        BarChartRodData(
+          toY: y,
+          color: color,
+          width: 20,
+          borderRadius: BorderRadius.circular(4),
+        ),
+      ],
     );
   }
 }

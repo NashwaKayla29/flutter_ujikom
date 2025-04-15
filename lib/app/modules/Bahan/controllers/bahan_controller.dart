@@ -1,40 +1,13 @@
-import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
 import 'dart:convert';
-
-class Bahan {
-  final int id;
-  final String nama;
-  final String ukuranBahan;
-  final String tanggalMasukBahan;
-  final String masaBahan;
-  final String yard;
-
-  Bahan({
-    required this.id,
-    required this.nama,
-    required this.ukuranBahan,
-    required this.tanggalMasukBahan,
-    required this.masaBahan,
-    required this.yard,
-  });
-
-  factory Bahan.fromJson(Map<String, dynamic> json) {
-    return Bahan(
-      id: json['id'],
-      nama: json['nama_bahan'] ?? 'Tidak diketahui', // Hindari null pada nama
-      ukuranBahan: json['ukuran_bahan'], // Pastikan harga aman
-      tanggalMasukBahan: json['tanggal_masuk_bahan'],
-      masaBahan: json['masa_bahan'],
-      yard: json['yard'], // Hindari null pada stok
-    );
-  }
-}
+import 'package:get/get.dart';
+import 'package:dio/dio.dart';
+import 'package:project_ujikom/app/data/bahan_response.dart';
 
 class BahanController extends GetxController {
   static const String baseUrl = 'http://192.168.0.122:8000/api/bahan';
+  final Dio dio = Dio();
   var isLoading = false.obs;
-  var bahanList = <Bahan>[].obs;
+  var bahanList = <Data>[].obs;
 
   @override
   void onInit() {
@@ -46,33 +19,66 @@ class BahanController extends GetxController {
     try {
       isLoading(true);
 
-      final response = await http.get(Uri.parse(baseUrl), headers: {
-        'Accept': 'application/json',
-      });
+      final response = await dio.get(baseUrl);
 
       if (response.statusCode == 200) {
-        var jsonResponse = json.decode(response.body);
+        final data = response.data;
 
-        if (jsonResponse is Map<String, dynamic> &&
-            jsonResponse.containsKey('data')) {
-          var bahanData = jsonResponse['data'];
-          if (bahanData is List) {
-            bahanList.assignAll(
-                bahanData.map((item) => Bahan.fromJson(item)).toList());
-          } else {
-            Get.snackbar(
-                'Error', 'Format data tidak sesuai: Data tidak berupa List');
-          }
+        if (data is Map<String, dynamic> && data.containsKey('data')) {
+          final List rawList = data['data'];
+          bahanList.assignAll(rawList.map((e) => Data.fromJson(e)).toList());
         } else {
-          Get.snackbar(
-              'Error', 'Format data tidak sesuai: Tidak ada kunci "data"');
+          Get.snackbar('Gagal', 'Format data tidak sesuai');
         }
       } else {
-        Get.snackbar(
-            'Error ${response.statusCode}', 'Gagal mengambil data bahan');
+        Get.snackbar('Gagal', 'Kode status: ${response.statusCode}');
       }
     } catch (e) {
       Get.snackbar('Error', 'Terjadi kesalahan: $e');
+    } finally {
+      isLoading(false);
+    }
+  }
+
+  Future<void> addBahan({
+    required String nama,
+    required String ukuranBahan,
+    required String tanggalMasukBahan,
+    required String masaBahan,
+    required String yard,
+    required String stok,
+    required String keterangan,
+  }) async {
+    try {
+      isLoading(true);
+
+      final response = await dio.post(
+        baseUrl,
+        options: Options(headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        }),
+        data: jsonEncode({
+          'nama_bahan': nama,
+          'ukuran_bahan': ukuranBahan,
+          'tanggal_masuk_bahan': tanggalMasukBahan,
+          'masa_bahan': masaBahan,
+          'yard': yard,
+          'stok': stok,
+          'keterangan': keterangan,
+        }),
+      );
+
+      if (response.statusCode == 201) {
+        Get.snackbar('Berhasil', 'Data bahan berhasil ditambahkan');
+        fetchBahan(); // Refresh data
+      } else {
+        final message =
+            response.data['message'] ?? 'Terjadi kesalahan saat menambahkan';
+        Get.snackbar('Gagal', message);
+      }
+    } catch (e) {
+      Get.snackbar('Error', 'Gagal menambahkan data: $e');
     } finally {
       isLoading(false);
     }

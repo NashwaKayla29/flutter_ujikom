@@ -23,12 +23,11 @@ class DashboardView extends GetView<DashboardController> {
           children: [
             _buildWelcomeCard(),
             const SizedBox(height: 20),
-            const GrafikProduksiView(), // GRAFIK DIMASUKIN DI SINI
-            const SizedBox(height: 20),
             GridView.count(
-              crossAxisCount: 2,
-              crossAxisSpacing: 16,
-              mainAxisSpacing: 16,
+              crossAxisCount: 3,
+              childAspectRatio: 1.1,
+              crossAxisSpacing: 12,
+              mainAxisSpacing: 12,
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               children: [
@@ -52,6 +51,8 @@ class DashboardView extends GetView<DashboardController> {
                     onTap: () => Get.toNamed("/qc")),
               ],
             ),
+            const SizedBox(height: 20),
+            const GrafikProduksiView(), // Pindah ke bawah sini
           ],
         ),
       ),
@@ -68,27 +69,27 @@ class DashboardView extends GetView<DashboardController> {
         elevation: 2,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(10),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               CircleAvatar(
-                radius: 24,
+                radius: 20,
                 backgroundColor: color.withOpacity(0.3),
-                child: Icon(icon, color: color, size: 30),
+                child: Icon(icon, color: color, size: 22),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 10),
               Text(
                 title,
                 style:
-                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 4),
               Text(
                 value,
                 style: const TextStyle(
-                    fontSize: 18,
+                    fontSize: 14,
                     fontWeight: FontWeight.bold,
                     color: Colors.black87),
               ),
@@ -191,7 +192,6 @@ class DashboardView extends GetView<DashboardController> {
   }
 }
 
-// =============== GRAFIK VIEW ===============
 class GrafikProduksiView extends StatelessWidget {
   const GrafikProduksiView({super.key});
 

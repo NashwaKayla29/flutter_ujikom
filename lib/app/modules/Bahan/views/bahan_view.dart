@@ -1,3 +1,4 @@
+// import yang dibutuhkan
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/bahan_controller.dart';
@@ -63,6 +64,33 @@ class BahanView extends GetView<BahanController> {
                     Text("Keterangan: ${bahan.keterangan ?? '-'}"),
                   ],
                 ),
+                trailing: PopupMenuButton<String>(
+                  onSelected: (value) {
+                    if (value == 'edit') {
+                      showDialog(
+                        context: context,
+                        builder: (context) => _FormTambahBahan(
+                          controller: controller,
+                          isEdit: true,
+                          bahanId: bahan.id!,
+                          existingData: bahan,
+                        ),
+                      );
+                    } else if (value == 'delete') {
+                      controller.deleteBahan(bahan.id!);
+                    }
+                  },
+                  itemBuilder: (context) => [
+                    const PopupMenuItem(
+                      value: 'edit',
+                      child: Text('Edit'),
+                    ),
+                    const PopupMenuItem(
+                      value: 'delete',
+                      child: Text('Hapus'),
+                    ),
+                  ],
+                ),
               ),
             );
           },
@@ -79,18 +107,20 @@ class BahanView extends GetView<BahanController> {
       ),
     );
   }
-
-  String formatRupiah(double harga) {
-    final formatCurrency =
-        NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0);
-    return formatCurrency.format(harga);
-  }
 }
 
 class _FormTambahBahan extends StatefulWidget {
   final BahanController controller;
+  final bool isEdit;
+  final int? bahanId;
+  final dynamic existingData;
 
-  const _FormTambahBahan({required this.controller});
+  const _FormTambahBahan({
+    required this.controller,
+    this.isEdit = false,
+    this.bahanId,
+    this.existingData,
+  });
 
   @override
   State<_FormTambahBahan> createState() => _FormTambahBahanState();
@@ -107,9 +137,24 @@ class _FormTambahBahanState extends State<_FormTambahBahan> {
   final keteranganController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    if (widget.isEdit && widget.existingData != null) {
+      final data = widget.existingData;
+      namaController.text = data.namaBahan ?? '';
+      ukuranController.text = data.ukuranBahan ?? '';
+      tanggalController.text = data.tanggalMasukBahan ?? '';
+      masaController.text = data.masaBahan ?? '';
+      yardController.text = data.yard ?? '';
+      stokController.text = data.stok ?? '';
+      keteranganController.text = data.keterangan ?? '';
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text("Tambah Data Bahan"),
+      title: Text(widget.isEdit ? "Edit Data Bahan" : "Tambah Data Bahan"),
       content: SingleChildScrollView(
         child: Form(
           key: _formKey,
@@ -133,16 +178,28 @@ class _FormTambahBahanState extends State<_FormTambahBahan> {
         ElevatedButton(
             onPressed: () async {
               if (_formKey.currentState!.validate()) {
-                await widget.controller.addBahan(
-                  nama: namaController.text,
-                  ukuranBahan: ukuranController.text,
-                  tanggalMasukBahan: tanggalController.text,
-                  masaBahan: masaController.text,
-                  yard: yardController.text,
-                  stok: stokController.text,
-                  keterangan: keteranganController.text,
-                );
-
+                if (widget.isEdit) {
+                  await widget.controller.editBahan(
+                    id: widget.bahanId!,
+                    nama: namaController.text,
+                    ukuranBahan: ukuranController.text,
+                    tanggalMasukBahan: tanggalController.text,
+                    masaBahan: masaController.text,
+                    yard: yardController.text,
+                    stok: stokController.text,
+                    keterangan: keteranganController.text,
+                  );
+                } else {
+                  await widget.controller.addBahan(
+                    nama: namaController.text,
+                    ukuranBahan: ukuranController.text,
+                    tanggalMasukBahan: tanggalController.text,
+                    masaBahan: masaController.text,
+                    yard: yardController.text,
+                    stok: stokController.text,
+                    keterangan: keteranganController.text,
+                  );
+                }
 
                 Navigator.of(context).pop();
               }
